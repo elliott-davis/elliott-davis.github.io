@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on TireFire.dev</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on TireFire.dev</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 02 Jun 2022 12:50:24 -0500</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Broadcom VMware Acquisition</title>
+      <link>/posts/broadcom-vmware-acquisition/</link>
+      <pubDate>Thu, 02 Jun 2022 12:50:24 -0500</pubDate>
+      
+      <guid>/posts/broadcom-vmware-acquisition/</guid>
+      <description>I have a lot of feelings swirling around the announcement that Broadcom is acquiring VMware. When I joined VMware I was under no illusions of its current state. Pretty stagnant, and living on its data center legacy. There were a lot of pivots to public cloud in progress but none of them were really gaining traction in the market. I also knew there was an incredibly talented and empathetic group of people working there.</description>
+      <content>&lt;p&gt;I have a lot of feelings swirling around the announcement that Broadcom is acquiring VMware. When I joined VMware I was under no illusions of its current state. Pretty stagnant, and living on its data center legacy. There were a lot of pivots to public cloud in progress but none of them were really gaining traction in the market. I also knew there was an incredibly talented and empathetic group of people working there. I joined because there was a spark of a promise to innovate in spaces that were yet to be discovered.&lt;/p&gt;
+&lt;p&gt;When Broadcom announced they were acquiring the VMware, my heart sank. I knew that Broadcom had essentially gutted CA Technologies and Symantec’s research arms so the outlook for my future appeared bleak.&lt;/p&gt;
+&lt;p&gt;That disappointment gave way to fear. I have been at VMware for less than a year AND I’m in research, surely I’m first on the chopping block for a layoff. Broadcom announced that they want to increase VMware’s revenue by close to 4 billion dollars over the next 3 years through “streamlining” and “subscription”. VMware has been trying unsuccessfully to find a functional subscription model for the last 2 years. I can only assume Broadcom will strongarm current customers, accelerating the adoption of public cloud and getting a tighter grip on their current whales. The “streamlining” aspect affects me personally. Obviously there are redundancies in a merger: HR, IT, Physical operations, etc. However, in the office of the CTO, I’m basically in a cost center.  Broadcom doesn’t have a great track record for innovation either so I am doubtful that will change now.&lt;/p&gt;
+&lt;p&gt;Not to sound cliché but I guess only time will tell what my fate, along with those of my colleagues and teammates will be. Until then, I’ll continue to focus on the levers I can pull and remain in control of.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
+      <link>/posts/hello_world/</link>
+      <pubDate>Fri, 12 Nov 2021 11:38:46 -0600</pubDate>
+      
+      <guid>/posts/hello_world/</guid>
+      <description>My wife was remarking on how bad my current domain excellent.io is to spell when I set her up with an account for email. She has also recently started taking a C++ fundamentals class and asked how hard it would be to get a new domain that sounded more developer focused. Seeing as dumpsterfire.dev was already taken, I thought the next best word to describe tech is &amp;ldquo;tirefire&amp;rdquo;. Now my bank account is short $12 and I am the proud owner of tirefire.</description>
+      <content>&lt;p&gt;My wife was remarking on how bad my current domain &lt;code&gt;excellent.io&lt;/code&gt; is to spell when I set her up with an account for email.
+She has also recently started taking a C++ fundamentals class and asked how hard it would be to get a new domain that
+sounded more developer focused. Seeing as &lt;code&gt;dumpsterfire.dev&lt;/code&gt; was already taken, I thought the next best word to describe
+tech is &amp;ldquo;tirefire&amp;rdquo;. Now my bank account is short $12 and I am the proud owner of &lt;code&gt;tirefire.dev&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Normally I&amp;rsquo;d buy a domain, set up my email, throw in a DNS redirect to my GitHub page and call it a day. However, I was
+inspired by my wife&amp;rsquo;s willingness to step out of her comfort zone and try something new, so I decided to do the same.
+I have read others blogs and benefited from their experience, but I&amp;rsquo;ve always been afraid to start one myself. Writing
+has never been my greatest strength and the paralyzing fear of looking dumb on the internet for missing a comma or poor
+grammar has always been a blocker.&lt;/p&gt;
+&lt;p&gt;As an engineer, I am always learning, and I don&amp;rsquo;t see why blogging needs to be any different. So, as is with any of the code
+I write, PRs welcome on &lt;a href=&#34;https://github.com/elliott-davis/tirefire&#34;&gt;GitHub&lt;/a&gt; if you see any mistakes or want to do a guest
+post about your own tirefires.&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>
