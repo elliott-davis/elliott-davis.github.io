@@ -1,0 +1,27 @@
+languageCode = "en-us"
+defaultContentLanguage = "en"
+enableRobotsTXT = true
+enableEmoji = true
+
+theme = "elliott-resume"
+disableKinds = ["page", "section", "taxonomy", "term", "RSS", "sitemap"]
+
+baseURL = "https://tirefire.dev/about"
+title = "Resume"
+#googleAnalytics = ""
+
+[params]
+enableMetaTags = true
+colorLight = "#fff"
+colorDark = "#000"
+colorPageBackground = "#ddd"
+colorPrimary = "#f2511b"
+colorSecondary = "#000"
+colorIconPrimary = "#fff"
+colorIconBackground = "#f2511b"
+colorRightColumnBackground = "#f5f5f5"
+colorRightColumnHeadingText = "#000"
+colorRightColumnBodyText = "#000"
+colorRightColumnIconPrimary = "#fff"
+colorRightColumnIconBackground = "#f2511b"
+pages = 1

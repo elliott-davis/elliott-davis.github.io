@@ -1,0 +1,96 @@
+
+   
+BasicInfo:
+  FirstName: Elliott
+  LastName: Davis
+  Photo: images/avatar.jpg
+  Contacts:
+    - Icon: fas fa-phone
+      Info: +1 512 666 9664
+    - Icon: fas fa-envelope
+      Info: elliott@tirefire.dev
+    - Icon: fas fa-globe
+      Info: tirefire.dev
+    - Icon: fas fa-map-marker-alt
+      Info: United States
+
+Profile: Eager programming professional with demonstrated expertise in web applications development, systems architecture and automation. Skilled in multiple languages, application architectural patterns and development methodologies.
+
+
+Experience:
+  - Employer: VMware
+    Place: Palo Alto, CA
+    Positions:
+      - Title: Launch Architect
+        Date: Aug 2021 - Present
+        Details:
+          - Built proof of concept for kubernetes distribution under 50M.
+          - Launched a black box kuberentes install inside ESX.
+          - Collaborated with customer design partners to perfect kubernetes in a box.
+        Badges: ['Golang', 'Bash', 'ESX', 'Kubernetes']
+  - Employer: Salesforce
+    Place: San Francisco, CA
+    Positions:
+      - Title: Lead Engineer
+        Date: Jan 2018 - Aug 2021
+        Details:
+          - Led team to deliver  a new development environment based on Kubernetes to the Pardot business unit which allowed them to easily experiment with immutable infrastructure.
+          - Developed system for deploying and reverting HAProxy config changes which reduced deployment and  incident remediation time from 15 minutes to 10 seconds.
+          - Mentored intern through his first project at Salesforce which is still used to help developers gain insights into build metrics today.
+          - Led team to deliver chatops and CI system migrations to Slack and Buildkite.
+          - Developed system for auto-remediation of CVEs in mutable infrastructure.
+        Badges: ['Golang', 'Ruby', 'Bash', 'Kubernetes', 'Terraform', 'AWS']
+  - Employer: Chef Software
+    Place: Seattle, WA
+    Positions:
+      - Title: Senior Software Engineer
+        Date: Mar 2015 - Nov 2018 
+        Details:
+          - Led application teams to develop and support new features in Elixir and Erlang.
+          - Developed highly distributed SaaS written in Rust.
+          - Engaged with Chef's open source community to develop new features and fixes.
+          - Identified process improvements for delivering business value faster.
+          - Developed robust architecture for fault tolerant stateful applications.
+          - Led external contract teams to deliver Kubernetes integrations for product.
+          - <a href="https://www.youtube.com/watch?v=5idV8kbyN8M&list=PLj6h78yzYM2N8GdbjmhVU65KYm_68qBmo&index=322">Spoke</a> at KubeCon EU 2017 about build pipeline landscapes in Kubernetes.
+          - Earned promotion for cross cutting team collaboration and presenting architectural solutions.
+        Badges: ['Erlang', 'Rust', 'React', 'AngularJS', 'Kubernetes']
+  - Employer: cPanel
+    Place: Houston, TX
+    Positions:
+      - Title: Systems Software Developer II
+        Date: Mar 2013 - Mar 2015 
+        Details:
+          - Designed, developed and deployed OpenStack/Ceph virtualization infrastructure utilizing MAAS and Chef.
+          - Served as core reviewer for the OpenStack Chef project.
+          - Refactored log processing system using ElasticSearch, LogStash and Python.
+          - Developed Python, AngularJS and Perl applications for internal OpenStack virtualization infrastructure.
+        Badges: ['Perl', 'ELK', 'AngularJS', 'OpenStack']
+  - Employer: Bywater Solutions
+    Place: Santa Barbra, CA
+    Positions:
+      - Title: Development Specialist
+        Date: Jul 2012 - Mar 2013 
+        Details:
+          - Developed new features and fixes for Koha (open source integrated library system).
+          - Participated in sales calls and a technical lead.
+          - Served as Quality Assurance Assistant for the Koha Community.
+        Badges: ['Perl', 'Koha']
+
+Education:
+  - Course: BS in Computer Science
+    Place: University of Texas at Tyler
+    Date: Aug 2007 - May 2012
+
+
+Technologies: Developed production applications in Rust, Go, Ruby and JavaScript. Experience modernizing legacy application architectures by incorporating new paradigms to speed up delivery from development to production.
+
+Certifications:
+  - Scrum Master / Scrum Alliance (2014)
+  - Product Owner / Scrum Alliance (2018)
+
+Interests:
+  - Strength Training
+  - Cooking
+  - Parenting
+  - Traveling

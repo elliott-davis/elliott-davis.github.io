@@ -1,3 +1,9 @@
 [submodule "themes/terminal"]
 	path = themes/terminal
 	url = https://github.com/panr/hugo-theme-terminal.git
+[submodule "resume-site/themes/almeida-cv"]
+	path = resume-site/themes/almeida-cv
+	url = https://github.com/ineesalmeida/almeida-cv.git
+[submodule "resume-site/themes/elliott-resume"]
+	path = resume-site/themes/elliott-resume
+	url = git@github.com:elliott-davis/elliott-resume.git
