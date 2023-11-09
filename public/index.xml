@@ -5,8 +5,144 @@
     <link>/</link>
     <description>Recent content on TireFire.dev</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 02 Jun 2022 12:50:24 -0500</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <lastBuildDate>Wed, 08 Nov 2023 20:36:14 -0600</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Llm_bot</title>
+      <link>/posts/llm_bot/</link>
+      <pubDate>Wed, 08 Nov 2023 20:36:14 -0600</pubDate>
+      
+      <guid>/posts/llm_bot/</guid>
+      <description>Introduction In the world of chatbots, natural language processing (NLP) has taken center stage, and Hugging Face Transformers has emerged as a powerful toolkit for working with NLP models. Slack, a popular team collaboration platform, offers a great environment for deploying custom bots to enhance communication within your workspace. In this blog post, I&amp;rsquo;ll walk you through the process of creating a Slack bot powered by Hugging Face Transformers. By the end, you&amp;rsquo;ll have a conversational bot capable of performing various NLP tasks right in your Slack channels.</description>
+      <content>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;In the world of chatbots, natural language processing (NLP) has taken center stage, and Hugging Face Transformers has emerged as a powerful toolkit for working with NLP models. Slack, a popular team collaboration platform, offers a great environment for deploying custom bots to enhance communication within your workspace. In this blog post, I&amp;rsquo;ll walk you through the process of creating a Slack bot powered by Hugging Face Transformers. By the end, you&amp;rsquo;ll have a conversational bot capable of performing various NLP tasks right in your Slack channels.&lt;/p&gt;
+&lt;h1 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h1&gt;
+&lt;p&gt;Before we dive into the development process, let&amp;rsquo;s make sure we have the necessary tools and accounts set up:&lt;/p&gt;
+&lt;p&gt;Slack Account: You need an active Slack account to create and deploy your bot within your workspace.&lt;/p&gt;
+&lt;p&gt;Dependencies: Install the dependencies required by cloning &lt;a href=&#34;https://github.com/elliott-davis/slack_thread_summarizer&#34;&gt;https://github.com/elliott-davis/slack_thread_summarizer&lt;/a&gt; and running &lt;code&gt;pip install -r ./requirements.txt&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Bot Token: To create a Slack bot, you&amp;rsquo;ll need to set up a Slack App and generate a bot token. This token will enable your bot to interact with your Slack workspace.&lt;/p&gt;
+&lt;h1 id=&#34;setting-up-your-slack-bot&#34;&gt;Setting Up Your Slack Bot&lt;/h1&gt;
+&lt;p&gt;Create a Slack App:&lt;/p&gt;
+&lt;p&gt;Go to the Slack API and click on &amp;ldquo;Create an App.&amp;rdquo;
+Give your app a name, select your workspace, and click &amp;ldquo;Create App.&amp;rdquo;
+Enable OAuth &amp;amp; Permissions:&lt;/p&gt;
+&lt;p&gt;In your app settings, navigate to &amp;ldquo;OAuth &amp;amp; Permissions.&amp;rdquo;
+Add the following Bot Token Scopes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;app_mentions:read&lt;/li&gt;
+&lt;li&gt;channels:history&lt;/li&gt;
+&lt;li&gt;channels:join&lt;/li&gt;
+&lt;li&gt;channels:read&lt;/li&gt;
+&lt;li&gt;chat:write&lt;/li&gt;
+&lt;li&gt;commands&lt;/li&gt;
+&lt;li&gt;groups:history&lt;/li&gt;
+&lt;li&gt;im:history&lt;/li&gt;
+&lt;li&gt;mpim:history&lt;/li&gt;
+&lt;li&gt;users:read&lt;/li&gt;
+&lt;li&gt;commands
+Save your changes.
+Install Your App to Workspace:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In your app settings, go to &amp;ldquo;Install App&amp;rdquo; and click the &amp;ldquo;Install to Workspace&amp;rdquo; button.
+Follow the prompts to grant permissions to your bot in your workspace.
+Note the Bot Token:&lt;/p&gt;
+&lt;p&gt;In your app settings, go to &amp;ldquo;OAuth &amp;amp; Permissions&amp;rdquo; and copy the Bot User OAuth Token. You&amp;rsquo;ll need this token to authenticate your bot.&lt;/p&gt;
+&lt;h1 id=&#34;building-the-slack-bot&#34;&gt;Building the Slack Bot&lt;/h1&gt;
+&lt;p&gt;Now that you have your Slack bot set up, let&amp;rsquo;s create a Python script that uses Hugging Face Transformers to power your bot.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; haystack.nodes &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; TransformersSummarizer
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; haystack &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; Document
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; os
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; slack_bolt &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; App
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; slack_bolt.adapter.socket_mode &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; SocketModeHandler
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;app &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; App(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    token&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;os&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;environ&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SLACK_BOT_TOKEN&amp;#34;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    signing_secret&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;os&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;environ&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SLACK_SIGNING_SECRET&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;summarizer &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; TransformersSummarizer(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    model_name_or_path&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;philschmid/flan-t5-base-samsum&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;name_db &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Cache the user ID&amp;#39;s and real names from the thread so we don&amp;#39;t blow past our rate limit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;get_real_name&lt;/span&gt;(client, id: str) &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; id &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; name_db:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; name_db[id]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    real_name &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; client&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;users_info(user&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;id)[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt;][&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;real_name&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    name_db[id] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; real_name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; real_name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@app.event&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;app_mention&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;summarize_thread&lt;/span&gt;(client, event, say):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    thread_ts &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;thread_ts&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; thread_ts &lt;span style=&#34;color:#f92672&#34;&gt;is&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        say(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sorry, I can only summarize threads&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    channel_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;channel&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    result &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; client&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;conversations_replies(channel&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;channel_id, ts&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;thread_ts)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; result[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ok&amp;#34;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        say(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;failed to get thread text. Try again later&amp;#34;&lt;/span&gt;, thread_ts&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;thread_ts)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Combine the content of the thread into a single document formatted like:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Elliott Davis: And he said whaaaaa&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Matt Dresser: Nooooo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    conversation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Document(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;join(get_real_name(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        client, message[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt;]) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; message[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;text&amp;#34;&lt;/span&gt;] &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; message &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; result[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;messages&amp;#34;&lt;/span&gt;][:&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    summary &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; summarizer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;predict(documents&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[conversation])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    say(text&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;summary[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;meta[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;summary&amp;#34;&lt;/span&gt;], thread_ts&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;thread_ts)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; __name__ &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;__main__&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Used in dev mode since work blocks ngrok&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    SocketModeHandler(app, os&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;environ[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SLACK_APP_TOKEN&amp;#34;&lt;/span&gt;])&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;start()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this script, I leverage the slack API to ensure that we are in a thread, then read all messages in that thread into a single string. This string is precisely formatted to match the models training data from the samsum dataset. After formatting the text, we can feed it into the transformer model to make a prediction on the summarized text and return it to slack.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Creating a Slack bot powered by Hugging Face Transformers and haystack can greatly enhance communication and productivity in your workspace. With the capabilities of NLP at your bot&amp;rsquo;s disposal, you can automate tasks, answer questions, and assist your team in various ways. By following the steps outlined in this blog post, you can bring your NLP-powered Slack bot to life and make your workspace even more dynamic and interactive.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Storming, Forming and Norming</title>
+      <link>/posts/storming-forming-norming/</link>
+      <pubDate>Thu, 15 Sep 2022 20:40:24 -0500</pubDate>
+      
+      <guid>/posts/storming-forming-norming/</guid>
+      <description>Invariably, every new team goes through the storming, forming and norming phases. There is the initial honeymoon period. Everyone is excited, nobody wants to step on toes and we all crave quick success. Then, some one gets annoyed, the project slows down and shit just hits the fan. How the hell, are you as an engineering lead supposed to handle the shit storm?
+I have hit the storming phase several times in my career (the curse of job hopping).</description>
+      <content>&lt;p&gt;Invariably, every new team goes through the storming, forming and norming phases. There is the initial honeymoon period. Everyone is excited, nobody wants to step on toes and we all crave quick success. Then, some one gets annoyed, the project slows down and shit just hits the fan. How the hell, are you as an engineering lead supposed to handle the shit storm?&lt;/p&gt;
+&lt;p&gt;I have hit the storming phase several times in my career (the curse of job hopping). I have started developing some tenants of bootstrapping a new team that will hopefully make this storming phase more manageable:&lt;/p&gt;
+&lt;h1 id=&#34;the-tenants-of-bootstrapping-a-new-engineering-team&#34;&gt;The tenants of bootstrapping a new engineering team&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;We map product value to users, through user stories. Technical details can be added as tasks or as definitions of done
+&lt;ul&gt;
+&lt;li&gt;This prevents the refactor kings and queens on your team from going down the rabbit hole&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;We communicate openly in slack and zoom. If you need help, ask for a pair or ask a team for help in slack
+&lt;ul&gt;
+&lt;li&gt;:shockedpikachu: People are often uncomfortable not looking knowledgeable. Create a culture of leaning and acceptance of failure.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;We raise issues early. If something is bugging you or you see a gap, raise the issue as soon as possible
+&lt;ul&gt;
+&lt;li&gt;Don&amp;rsquo;t let people get to a point of boiling. Set a space for people to raise issues and surface problems early&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Rules are enforced as code. Whether it’s through CI linting or editorconfig, we need not nit-pick each other
+&lt;ul&gt;
+&lt;li&gt;When you see something that bugs you, AUTOMATE FIXING IT. Code review can suck. Make the CI system or your editor the enemy, not your teammates.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I&amp;rsquo;m still learning, I&amp;rsquo;m sure there are more tenants that will help teams get through the storming period so feel free to drop in a PR and update this list&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>Broadcom VMware Acquisition</title>
       <link>/posts/broadcom-vmware-acquisition/</link>
@@ -18,6 +154,24 @@
 &lt;p&gt;When Broadcom announced they were acquiring the VMware, my heart sank. I knew that Broadcom had essentially gutted CA Technologies and Symantec’s research arms so the outlook for my future appeared bleak.&lt;/p&gt;
 &lt;p&gt;That disappointment gave way to fear. I have been at VMware for less than a year AND I’m in research, surely I’m first on the chopping block for a layoff. Broadcom announced that they want to increase VMware’s revenue by close to 4 billion dollars over the next 3 years through “streamlining” and “subscription”. VMware has been trying unsuccessfully to find a functional subscription model for the last 2 years. I can only assume Broadcom will strongarm current customers, accelerating the adoption of public cloud and getting a tighter grip on their current whales. The “streamlining” aspect affects me personally. Obviously there are redundancies in a merger: HR, IT, Physical operations, etc. However, in the office of the CTO, I’m basically in a cost center.  Broadcom doesn’t have a great track record for innovation either so I am doubtful that will change now.&lt;/p&gt;
 &lt;p&gt;Not to sound cliché but I guess only time will tell what my fate, along with those of my colleagues and teammates will be. Until then, I’ll continue to focus on the levers I can pull and remain in control of.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Asking The Silly Questions</title>
+      <link>/posts/silly_questions/</link>
+      <pubDate>Tue, 16 Nov 2021 15:59:46 -0600</pubDate>
+      
+      <guid>/posts/silly_questions/</guid>
+      <description>I started my first salaried job in 2010 as a sysadmin for the University library. As a new person in tech, still going to college, I knew nothing. I thought I knew something. After all, I had taken at least 2 semesters of Java and worked part-time as a Perl dev :eyeroll:. At that point in my career, the field of unknown unknowns was vast.
+As an intern where I learned Perl, I leaned heavily on the senior members of our team to teach me pretty much everything about scripting languages.</description>
+      <content>&lt;p&gt;I started my first salaried job in 2010 as a sysadmin for the University library.
+As a new person in tech, still going to college, I knew nothing. I thought I knew something. After all, I had taken at
+least 2 semesters of Java and worked part-time as a Perl dev :eyeroll:. At that point in my career, the field of unknown
+unknowns was vast.&lt;/p&gt;
+&lt;p&gt;As an intern where I learned Perl, I leaned heavily on the senior members of our team to teach me pretty much everything
+about scripting languages. I asked questions non-stop. So many questions in fact, that the Sr engineer had to finally
+tell me sometimes it&amp;rsquo;s better to figure it out myself.&lt;/p&gt;
 </content>
     </item>
     
