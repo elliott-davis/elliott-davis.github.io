@@ -1,6 +1,94 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on TireFire.dev</title><link>/posts/</link><description>Recent content in Posts on TireFire.dev</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 15 Sep 2022 20:40:24 -0500</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Storming, Forming and Norming</title><link>/posts/storming-forming-norming/</link><pubDate>Thu, 15 Sep 2022 20:40:24 -0500</pubDate><guid>/posts/storming-forming-norming/</guid><description>Invaribally, every new team goes through the storming, forming and norming phases. There is the initial honeyboon period. Everyone is excited, nobody wants to step on toes and we all crave quick success. Then, some one gets anoyed, the project slows down and shit just hits the fan. How the hell, are you as an engineering lead supposed to handle the shit storm?
-I have hit the storming phase several times in my career (the curse of job hopping).</description><content>&lt;p>Invaribally, every new team goes through the storming, forming and norming phases. There is the initial honeyboon period. Everyone is excited, nobody wants to step on toes and we all crave quick success. Then, some one gets anoyed, the project slows down and shit just hits the fan. How the hell, are you as an engineering lead supposed to handle the shit storm?&lt;/p>
-&lt;p>I have hit the storming phase several times in my career (the curse of job hopping). I have started developing some tenants of bootstapping a new team that will hopefully make this storming phase more manageable:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on TireFire.dev</title><link>/posts/</link><description>Recent content in Posts on TireFire.dev</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 08 Nov 2023 20:36:14 -0600</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Llm_bot</title><link>/posts/llm_bot/</link><pubDate>Wed, 08 Nov 2023 20:36:14 -0600</pubDate><guid>/posts/llm_bot/</guid><description>Introduction In the world of chatbots, natural language processing (NLP) has taken center stage, and Hugging Face Transformers has emerged as a powerful toolkit for working with NLP models. Slack, a popular team collaboration platform, offers a great environment for deploying custom bots to enhance communication within your workspace. In this blog post, I&amp;rsquo;ll walk you through the process of creating a Slack bot powered by Hugging Face Transformers. By the end, you&amp;rsquo;ll have a conversational bot capable of performing various NLP tasks right in your Slack channels.</description><content>&lt;h1 id="introduction">Introduction&lt;/h1>
+&lt;p>In the world of chatbots, natural language processing (NLP) has taken center stage, and Hugging Face Transformers has emerged as a powerful toolkit for working with NLP models. Slack, a popular team collaboration platform, offers a great environment for deploying custom bots to enhance communication within your workspace. In this blog post, I&amp;rsquo;ll walk you through the process of creating a Slack bot powered by Hugging Face Transformers. By the end, you&amp;rsquo;ll have a conversational bot capable of performing various NLP tasks right in your Slack channels.&lt;/p>
+&lt;h1 id="prerequisites">Prerequisites&lt;/h1>
+&lt;p>Before we dive into the development process, let&amp;rsquo;s make sure we have the necessary tools and accounts set up:&lt;/p>
+&lt;p>Slack Account: You need an active Slack account to create and deploy your bot within your workspace.&lt;/p>
+&lt;p>Dependencies: Install the dependencies required by cloning &lt;a href="https://github.com/elliott-davis/slack_thread_summarizer">https://github.com/elliott-davis/slack_thread_summarizer&lt;/a> and running &lt;code>pip install -r ./requirements.txt&lt;/code>.&lt;/p>
+&lt;p>Bot Token: To create a Slack bot, you&amp;rsquo;ll need to set up a Slack App and generate a bot token. This token will enable your bot to interact with your Slack workspace.&lt;/p>
+&lt;h1 id="setting-up-your-slack-bot">Setting Up Your Slack Bot&lt;/h1>
+&lt;p>Create a Slack App:&lt;/p>
+&lt;p>Go to the Slack API and click on &amp;ldquo;Create an App.&amp;rdquo;
+Give your app a name, select your workspace, and click &amp;ldquo;Create App.&amp;rdquo;
+Enable OAuth &amp;amp; Permissions:&lt;/p>
+&lt;p>In your app settings, navigate to &amp;ldquo;OAuth &amp;amp; Permissions.&amp;rdquo;
+Add the following Bot Token Scopes:&lt;/p>
+&lt;ul>
+&lt;li>app_mentions:read&lt;/li>
+&lt;li>channels:history&lt;/li>
+&lt;li>channels:join&lt;/li>
+&lt;li>channels:read&lt;/li>
+&lt;li>chat:write&lt;/li>
+&lt;li>commands&lt;/li>
+&lt;li>groups:history&lt;/li>
+&lt;li>im:history&lt;/li>
+&lt;li>mpim:history&lt;/li>
+&lt;li>users:read&lt;/li>
+&lt;li>commands
+Save your changes.
+Install Your App to Workspace:&lt;/li>
+&lt;/ul>
+&lt;p>In your app settings, go to &amp;ldquo;Install App&amp;rdquo; and click the &amp;ldquo;Install to Workspace&amp;rdquo; button.
+Follow the prompts to grant permissions to your bot in your workspace.
+Note the Bot Token:&lt;/p>
+&lt;p>In your app settings, go to &amp;ldquo;OAuth &amp;amp; Permissions&amp;rdquo; and copy the Bot User OAuth Token. You&amp;rsquo;ll need this token to authenticate your bot.&lt;/p>
+&lt;h1 id="building-the-slack-bot">Building the Slack Bot&lt;/h1>
+&lt;p>Now that you have your Slack bot set up, let&amp;rsquo;s create a Python script that uses Hugging Face Transformers to power your bot.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> haystack.nodes &lt;span style="color:#f92672">import&lt;/span> TransformersSummarizer
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> haystack &lt;span style="color:#f92672">import&lt;/span> Document
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> os
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> slack_bolt &lt;span style="color:#f92672">import&lt;/span> App
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> slack_bolt.adapter.socket_mode &lt;span style="color:#f92672">import&lt;/span> SocketModeHandler
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>app &lt;span style="color:#f92672">=&lt;/span> App(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> token&lt;span style="color:#f92672">=&lt;/span>os&lt;span style="color:#f92672">.&lt;/span>environ&lt;span style="color:#f92672">.&lt;/span>get(&lt;span style="color:#e6db74">&amp;#34;SLACK_BOT_TOKEN&amp;#34;&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> signing_secret&lt;span style="color:#f92672">=&lt;/span>os&lt;span style="color:#f92672">.&lt;/span>environ&lt;span style="color:#f92672">.&lt;/span>get(&lt;span style="color:#e6db74">&amp;#34;SLACK_SIGNING_SECRET&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>summarizer &lt;span style="color:#f92672">=&lt;/span> TransformersSummarizer(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> model_name_or_path&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;philschmid/flan-t5-base-samsum&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>name_db &lt;span style="color:#f92672">=&lt;/span> {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Cache the user ID&amp;#39;s and real names from the thread so we don&amp;#39;t blow past our rate limit&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">get_real_name&lt;/span>(client, id: str) &lt;span style="color:#f92672">-&amp;gt;&lt;/span> str:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> id &lt;span style="color:#f92672">in&lt;/span> name_db:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> name_db[id]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> real_name &lt;span style="color:#f92672">=&lt;/span> client&lt;span style="color:#f92672">.&lt;/span>users_info(user&lt;span style="color:#f92672">=&lt;/span>id)[&lt;span style="color:#e6db74">&amp;#34;user&amp;#34;&lt;/span>][&lt;span style="color:#e6db74">&amp;#34;real_name&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> name_db[id] &lt;span style="color:#f92672">=&lt;/span> real_name
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> real_name
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">@app.event&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;app_mention&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">summarize_thread&lt;/span>(client, event, say):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> thread_ts &lt;span style="color:#f92672">=&lt;/span> event&lt;span style="color:#f92672">.&lt;/span>get(&lt;span style="color:#e6db74">&amp;#34;thread_ts&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">None&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> thread_ts &lt;span style="color:#f92672">is&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> say(&lt;span style="color:#e6db74">&amp;#34;Sorry, I can only summarize threads&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> channel_id &lt;span style="color:#f92672">=&lt;/span> event&lt;span style="color:#f92672">.&lt;/span>get(&lt;span style="color:#e6db74">&amp;#34;channel&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">None&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result &lt;span style="color:#f92672">=&lt;/span> client&lt;span style="color:#f92672">.&lt;/span>conversations_replies(channel&lt;span style="color:#f92672">=&lt;/span>channel_id, ts&lt;span style="color:#f92672">=&lt;/span>thread_ts)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">not&lt;/span> result[&lt;span style="color:#e6db74">&amp;#34;ok&amp;#34;&lt;/span>]:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> say(&lt;span style="color:#e6db74">&amp;#34;failed to get thread text. Try again later&amp;#34;&lt;/span>, thread_ts&lt;span style="color:#f92672">=&lt;/span>thread_ts)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Combine the content of the thread into a single document formatted like:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Elliott Davis: And he said whaaaaa&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Matt Dresser: Nooooo&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> conversation &lt;span style="color:#f92672">=&lt;/span> Document(&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&lt;/span>&lt;span style="color:#f92672">.&lt;/span>join(get_real_name(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> client, message[&lt;span style="color:#e6db74">&amp;#34;user&amp;#34;&lt;/span>]) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;: &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> message[&lt;span style="color:#e6db74">&amp;#34;text&amp;#34;&lt;/span>] &lt;span style="color:#66d9ef">for&lt;/span> message &lt;span style="color:#f92672">in&lt;/span> result[&lt;span style="color:#e6db74">&amp;#34;messages&amp;#34;&lt;/span>][:&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>]))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> summary &lt;span style="color:#f92672">=&lt;/span> summarizer&lt;span style="color:#f92672">.&lt;/span>predict(documents&lt;span style="color:#f92672">=&lt;/span>[conversation])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> say(text&lt;span style="color:#f92672">=&lt;/span>summary[&lt;span style="color:#ae81ff">0&lt;/span>]&lt;span style="color:#f92672">.&lt;/span>meta[&lt;span style="color:#e6db74">&amp;#34;summary&amp;#34;&lt;/span>], thread_ts&lt;span style="color:#f92672">=&lt;/span>thread_ts)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> __name__ &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;__main__&amp;#34;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Used in dev mode since work blocks ngrok&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SocketModeHandler(app, os&lt;span style="color:#f92672">.&lt;/span>environ[&lt;span style="color:#e6db74">&amp;#34;SLACK_APP_TOKEN&amp;#34;&lt;/span>])&lt;span style="color:#f92672">.&lt;/span>start()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In this script, I leverage the slack API to ensure that we are in a thread, then read all messages in that thread into a single string. This string is precisely formatted to match the models training data from the samsum dataset. After formatting the text, we can feed it into the transformer model to make a prediction on the summarized text and return it to slack.&lt;/p>
+&lt;h1 id="conclusion">Conclusion&lt;/h1>
+&lt;p>Creating a Slack bot powered by Hugging Face Transformers and haystack can greatly enhance communication and productivity in your workspace. With the capabilities of NLP at your bot&amp;rsquo;s disposal, you can automate tasks, answer questions, and assist your team in various ways. By following the steps outlined in this blog post, you can bring your NLP-powered Slack bot to life and make your workspace even more dynamic and interactive.&lt;/p></content></item><item><title>Storming, Forming and Norming</title><link>/posts/storming-forming-norming/</link><pubDate>Thu, 15 Sep 2022 20:40:24 -0500</pubDate><guid>/posts/storming-forming-norming/</guid><description>Invariably, every new team goes through the storming, forming and norming phases. There is the initial honeymoon period. Everyone is excited, nobody wants to step on toes and we all crave quick success. Then, some one gets annoyed, the project slows down and shit just hits the fan. How the hell, are you as an engineering lead supposed to handle the shit storm?
+I have hit the storming phase several times in my career (the curse of job hopping).</description><content>&lt;p>Invariably, every new team goes through the storming, forming and norming phases. There is the initial honeymoon period. Everyone is excited, nobody wants to step on toes and we all crave quick success. Then, some one gets annoyed, the project slows down and shit just hits the fan. How the hell, are you as an engineering lead supposed to handle the shit storm?&lt;/p>
+&lt;p>I have hit the storming phase several times in my career (the curse of job hopping). I have started developing some tenants of bootstrapping a new team that will hopefully make this storming phase more manageable:&lt;/p>
 &lt;h1 id="the-tenants-of-bootstrapping-a-new-engineering-team">The tenants of bootstrapping a new engineering team&lt;/h1>
 &lt;ul>
 &lt;li>We map product value to users, through user stories. Technical details can be added as tasks or as definitions of done
@@ -10,7 +98,7 @@ I have hit the storming phase several times in my career (the curse of job hoppi
 &lt;/li>
 &lt;li>We communicate openly in slack and zoom. If you need help, ask for a pair or ask a team for help in slack
 &lt;ul>
-&lt;li>:shockedpikachu: People are often uncomfortable not looking knowledgable. Create a culture of leaning and acceptance of failure.&lt;/li>
+&lt;li>:shockedpikachu: People are often uncomfortable not looking knowledgeable. Create a culture of leaning and acceptance of failure.&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>We raise issues early. If something is bugging you or you see a gap, raise the issue as soon as possible
@@ -20,7 +108,7 @@ I have hit the storming phase several times in my career (the curse of job hoppi
 &lt;/li>
 &lt;li>Rules are enforced as code. Whether it’s through CI linting or editorconfig, we need not nit-pick each other
 &lt;ul>
-&lt;li>When you see something that bugs you, AUTOMATE FXING IT. Code review can suck. Make the CI system or your editor the enemy, not your teammates.&lt;/li>
+&lt;li>When you see something that bugs you, AUTOMATE FIXING IT. Code review can suck. Make the CI system or your editor the enemy, not your teammates.&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
